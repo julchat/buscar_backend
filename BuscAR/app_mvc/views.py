@@ -4,9 +4,9 @@ from django.contrib.auth import login, authenticate, logout
 from app_mvc.forms import RegistrationForm, AccountAuthenticationForm
 
 
-def index(request):
-    texto_html_basico = "Bienvenido a Buscar"
-    return HttpResponse(request, texto_html_basico)
+def home_view(request):
+    context = {}
+    return render(request, "app_mvc/home.html", context)
 
 
 def register_view(request, *args, **kwargs):
