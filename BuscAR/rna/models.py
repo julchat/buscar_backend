@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from clases.OurLogger import OurLogger
 
 
 class RNA(models.Model):
@@ -11,3 +12,11 @@ class RNA(models.Model):
 
     def __str__(self):
         return self.containerName
+
+    def entrenar(self, catalogo):
+        # entrenar(catalogo): void
+        pass
+
+    def buscarObjeto(self, recinto, objeto):
+        # buscarObjeto(recinto, objeto): Dictionary
+        pass
