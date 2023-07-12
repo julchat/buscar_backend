@@ -1,0 +1,63 @@
+{% block content %}
+<style type="text/css">
+	.my-grid{
+		border: 1px solid black;
+	}
+	.my-grid-item{
+		border: 1px solid blue;
+	}
+</style>
+
+<!-- Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
+<div class="container">
+		<!-- SMALL SCREENS -->
+	<div class="d-flex d-md-none flex-column my-auto align-items-center">
+		<h5 class="font-weight-normal">
+		<a class="p-2 text-dark" href="{% url 'home' %}">Home</a>
+		</h5>
+		<form class="search-bar justify-content-start" >
+			<input type="text" class="form-control" name="q" id="id_q_small" placeholder="Search...">
+		</form>
+		<div class="d-flex flex-row-reverse flex-grow-1">
+			<nav class="">
+				{% if request.user.is_authenticated %}
+				<div class="dropdown dropleft p-2 mt-2">
+					<div class="d-flex flex-row">
+						<div class="btn-group dropleft">
+							<img class="account-image rounded-circle m-auto d-block dropdown-toggle" id="id_profile_links" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" src="{{request.user.profile_image.url}}" alt="codingwithmitch logo" width="40" height="40">
+							<div class="dropdown-menu" aria-labelledby="id_profile_links">
+								<a class="dropdown-item" href="#"> {{ request.user.username }} </a>
+								<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% else %}
+					<a class="p-2 text-dark" href="{% url 'login' %}">Login</a>
+					<a class="btn btn-outline-primary m-2" href="{% url 'register' %}">Register</a>
+				{% endif %}
+			</nav>
+	  	</div>
+	</div>
+	<!-- END SMALL SCREENS -->
+
+	<!-- EL HTML QUE SIGUE FUE TOMADO DE OTRA PÁGINA SOLO APRA QUE MUESTRE ALGO VISIBLE PARA TESTEAR-->
+	<div class="my-grid d-flex flex-row justify-content-between">
+	<!-- <div class="my-grid d-flex flex-row justify-content-end"> -->
+		<p class="my-grid-item m-auto">Item</p>
+		<p class="my-grid-item m-auto">Item</p>
+		<p class="my-grid-item m-auto">Item</p>
+		<p class="my-grid-item m-auto">Item</p>
+		<p class="my-grid-item m-auto">Item</p>
+	</div>
+
+	<div class="my-grid d-flex flex-column mt-4">
+		<p class="my-grid-item mx-auto my-1 p-1">Item</p>
+		<p class="my-grid-item mx-auto my-1 p-1">Item</p>
+		<p class="my-grid-item mx-auto my-1 p-1">Item</p>
+		<p class="my-grid-item mx-auto my-1 p-1">Item</p>
+		<p class="my-grid-item mx-auto my-1 p-1">Item</p>
+	</div>
+
+</div>
+{% endblock content %}

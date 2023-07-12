@@ -25,8 +25,13 @@ SECRET_KEY = 'django-insecure-2=)m*^f+x*!d*20he^0%_ikwgbea48qk5k+42^9lk2z+ddxdpw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
+
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1']
+
+AUTH_USER_MODEL = "app_mvc.Account"
 
 # Application definition
 
@@ -37,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app_mvc',
+    'rna',
+    'catalogo',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
