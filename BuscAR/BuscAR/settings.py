@@ -61,9 +61,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+# ADDED BELOW T SUPPORT HTTPS/SSL   https://docs.djangoproject.com/en/2.2/topics/security/#ssl-https
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True  
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 
 ROOT_URLCONF = 'BuscAR.urls'
 
