@@ -30,8 +30,7 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '10.0.0.4', 'buscarg454.eastus.cloudapp.azure.com']
-#ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '10.0.0.4', 'buscarg454.eastus.cloudapp.azure.com', '024a-172-171-240-21.ngrok-free.app']
 
 AUTH_USER_MODEL = "app_mvc.Account"
 
@@ -61,13 +60,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# ADDED BELOW T SUPPORT HTTPS/SSL   https://docs.djangoproject.com/en/2.2/topics/security/#ssl-https
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# ADDED BELOW T SUPPORT HTTPS/SSL   https://docs.djangoproject.com/en/2.2/topics/security/#ssl-https
+"""
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True  
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+"""
 
 
 ROOT_URLCONF = 'BuscAR.urls'
