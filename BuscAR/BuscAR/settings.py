@@ -28,8 +28,9 @@ DEBUG = True
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
+CSRF_COOKIE_NAME = 'csrftoken'
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '192.168.200.2', '192.168.232.2','10.0.2.2']
 
 AUTH_USER_MODEL = "app_mvc.Account"
 
