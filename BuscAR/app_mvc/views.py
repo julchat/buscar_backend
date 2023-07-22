@@ -42,12 +42,9 @@ def register_view(request, *args, **kwargs):
 
     return render(request, 'app_mvc/register.html', context)
 
-def register_view_flutter(request, *args, **kwargs):
+def register_flutter_view(request, *args, **kwargs):
     print(request)
     print(request.user)
-    user = request.user
-    if user.is_authenticated:
-        return HttpResponse(f"Ya has ingresado como {user.email}")
     context = {}
 
     if request.POST:
@@ -90,7 +87,7 @@ def login_view(request, *args, **kwargs):
             context['login_form'] = form
     return render(request, "app_mvc/login.html", context)
 
-def login_view_flutter(request, *args, **kwargs):
+def login_flutter_view(request, *args, **kwargs):
     context = {}
 
     user = request.user
@@ -102,16 +99,18 @@ def login_view_flutter(request, *args, **kwargs):
         print(request.POST)
         form = AccountAuthenticationForm(request.POST)
         if form.is_valid():
+            print('formvalido')
             email = request.POST['email']
             password = request.POST['password']
             user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
                 print('logeado')
-                return redirect("home")
+                return JsonResponse({'usuario':user.username}, status = 200)
         else:
+            print('Form no valido')
             context['login_form'] = form
-    return render(request, "app_mvc/login.html", context)
+        return JsonResponse({'usuario':'error. Logeo malo'},status = 400)
 
 def get_redirect_if_exists(request):
     redirect = None
