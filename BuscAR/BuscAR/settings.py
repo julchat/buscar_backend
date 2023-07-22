@@ -29,8 +29,10 @@ DEBUG = True
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
-
+# COMENTAR/DESCOMENTAR EN CASO DE PASAR A WEBAPP
 ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '10.0.0.4', 'buscarg454.eastus.cloudapp.azure.com', '024a-172-171-240-21.ngrok-free.app']
+#ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+#####
 
 AUTH_USER_MODEL = "app_mvc.Account"
 
@@ -62,13 +64,25 @@ MIDDLEWARE = [
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 # ADDED BELOW T SUPPORT HTTPS/SSL   https://docs.djangoproject.com/en/2.2/topics/security/#ssl-https
-"""
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True  
+# COMENTAR/DESCOMENTAR EN CASO DE PASAR A WEBAPP
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+"""SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-"""
+SESSION_COOKIE_SECURE = True"""
+
+CORS_REPLACE_HTTPS_REFERER      = False
+HOST_SCHEME                     = "http://"
+SECURE_PROXY_SSL_HEADER         = None
+SECURE_SSL_REDIRECT             = False
+SESSION_COOKIE_SECURE           = False
+CSRF_COOKIE_SECURE              = False
+SECURE_HSTS_SECONDS             = None
+SECURE_HSTS_INCLUDE_SUBDOMAINS  = False
+SECURE_FRAME_DENY               = False
+#####
 
 
 ROOT_URLCONF = 'BuscAR.urls'
@@ -94,14 +108,24 @@ WSGI_APPLICATION = 'BuscAR.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# COMENTAR/DESCOMENTAR EN CASO DE PASAR A WEBAPP
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+"""hostname = os.environ['DBHOST']
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DBNAME'],
+        'HOST': hostname, # ADD this if neccessary + ".postgres.database.azure.com",
+        'USER': os.environ['DBUSER'] + "@" + hostname,
+        'PASSWORD': os.environ['DBPASS']
+    }
+}"""
+######
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
