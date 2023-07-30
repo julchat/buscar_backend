@@ -29,10 +29,16 @@ DEBUG = True
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
+<<<<<<< HEAD
 # COMENTAR/DESCOMENTAR EN CASO DE PASAR A WEBAPP
 ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '10.0.0.4', 'buscarg454.eastus.cloudapp.azure.com', '024a-172-171-240-21.ngrok-free.app']
 #ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 #####
+=======
+CSRF_COOKIE_NAME = 'csrftoken'
+
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '192.168.200.2', '192.168.232.2','10.0.2.2']
+>>>>>>> f62b08b859d94269ce910ab91fb939da7fc6d2f1
 
 AUTH_USER_MODEL = "app_mvc.Account"
 

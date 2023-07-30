@@ -23,9 +23,12 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name="home"),
+    path('register_flutter/', views.register_flutter_view, name="register_flutter"),
     path('register/', views.register_view, name="register"),
+    path('login_flutter/', views.login_flutter_view, name="login_flutter"),
     path('login/', views.login_view, name="login"),
     path('logout/', views.logout_view, name="logout"),
+    path('csrf_token/', views.csrf_token_view, name = "csrf"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change/done/',

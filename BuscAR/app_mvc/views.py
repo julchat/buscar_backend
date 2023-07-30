@@ -2,7 +2,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from app_mvc.forms import RegistrationForm, AccountAuthenticationForm
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
 
+def csrf_token_view(request):
+    csrf_token = get_token(request)
+    return HttpResponse(csrf_token)
 
 def home_view(request):
     context = {}
@@ -10,14 +15,18 @@ def home_view(request):
 
 
 def register_view(request, *args, **kwargs):
+    print(request)
+    print(request.user)
     user = request.user
     if user.is_authenticated:
         return HttpResponse(f"Ya has ingresado como {user.email}")
     context = {}
 
     if request.POST:
+        print (request.POST)
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            print (request.POST)
             form.save()
             email = form.cleaned_data.get('email').lower()
             raw_password = form.cleaned_data.get('password1')
@@ -33,6 +42,22 @@ def register_view(request, *args, **kwargs):
 
     return render(request, 'app_mvc/register.html', context)
 
+def register_flutter_view(request, *args, **kwargs):
+    print(request)
+    print(request.user)
+    context = {}
+
+    if request.POST:
+        print (request.POST)
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            print (request.POST)
+            form.save()
+            return JsonResponse({'message': 'Exitoso'}, status=200)
+        else:
+            form = RegistrationForm()
+            context['registration_form'] = form
+            return JsonResponse({'message': 'Fallido'}, status=400)
 
 def logout_view(request):
     logout(request)
@@ -62,6 +87,30 @@ def login_view(request, *args, **kwargs):
             context['login_form'] = form
     return render(request, "app_mvc/login.html", context)
 
+def login_flutter_view(request, *args, **kwargs):
+    context = {}
+
+    user = request.user
+    if user.is_authenticated:
+        print('Ya has ingresado como user')
+        return redirect("home")
+
+    if request.POST:
+        print(request.POST)
+        form = AccountAuthenticationForm(request.POST)
+        if form.is_valid():
+            print('formvalido')
+            email = request.POST['email']
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+                print('logeado')
+                return JsonResponse({'usuario':user.username}, status = 200)
+        else:
+            print('Form no valido')
+            context['login_form'] = form
+        return JsonResponse({'usuario':'error. Logeo malo'},status = 400)
 
 def get_redirect_if_exists(request):
     redirect = None
