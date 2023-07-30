@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+Django
+whitenoise
+psycopg2-binary
+=======
 appdirs==1.4.4
 asgiref==3.6.0
 astunparse==1.6.3
@@ -81,3 +86,4 @@ wincertstore==0.2
 wsproto==1.2.0
 yolo==0.3.1
 zipp==3.11.0
+>>>>>>> f62b08b859d94269ce910ab91fb939da7fc6d2f1
