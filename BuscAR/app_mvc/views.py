@@ -13,35 +13,6 @@ def home_view(request):
     context = {}
     return render(request, "app_mvc/home.html", context)
 
-
-def register_view(request, *args, **kwargs):
-    print(request)
-    print(request.user)
-    user = request.user
-    if user.is_authenticated:
-        return HttpResponse(f"Ya has ingresado como {user.email}")
-    context = {}
-
-    if request.POST:
-        print (request.POST)
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            print (request.POST)
-            form.save()
-            email = form.cleaned_data.get('email').lower()
-            raw_password = form.cleaned_data.get('password1')
-            account = authenticate(email=email, password=raw_password)
-            login(request, account)
-            destination = get_redirect_if_exists(request)
-            if destination:
-                return redirect(destination)
-            return redirect("home")
-        else:
-            form = RegistrationForm()
-            context['registration_form'] = form
-
-    return render(request, 'app_mvc/register.html', context)
-
 def register_flutter_view(request, *args, **kwargs):
     print(request)
     print(request.user)
@@ -59,33 +30,9 @@ def register_flutter_view(request, *args, **kwargs):
             context['registration_form'] = form
             return JsonResponse({'message': 'Fallido'}, status=400)
 
-def logout_view(request):
+def logout_flutter_view(request):
     logout(request)
-    return redirect("home")
-
-
-def login_view(request, *args, **kwargs):
-    context = {}
-
-    user = request.user
-    if user.is_authenticated:
-        return redirect("home")
-
-    if request.POST:
-        form = AccountAuthenticationForm(request.POST)
-        if form.is_valid():
-            email = request.POST['email']
-            password = request.POST['password']
-            user = authenticate(email=email, password=password)
-            if user:
-                login(request, user)
-                destination = get_redirect_if_exists(request)
-                if destination:
-                    return redirect(destination)
-                return redirect("home")
-        else:
-            context['login_form'] = form
-    return render(request, "app_mvc/login.html", context)
+    return JsonResponse({'logoutstatus':'OK'}, status = 200)
 
 def login_flutter_view(request, *args, **kwargs):
     context = {}
@@ -118,3 +65,62 @@ def get_redirect_if_exists(request):
         if request.GET.get("next"):
             redirect = str(request.GET.get("next"))
     return redirect
+
+
+"""
+def logout_view(request):
+    logout(request)
+    return redirect("home")
+
+def login_view(request, *args, **kwargs):
+    context = {}
+
+    user = request.user
+    if user.is_authenticated:
+        return redirect("home")
+
+    if request.POST:
+        form = AccountAuthenticationForm(request.POST)
+        if form.is_valid():
+            email = request.POST['email']
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+                destination = get_redirect_if_exists(request)
+                if destination:
+                    return redirect(destination)
+                return redirect("home")
+        else:
+            context['login_form'] = form
+    return render(request, "app_mvc/login.html", context)
+
+def register_view(request, *args, **kwargs):
+    print(request)
+    print(request.user)
+    user = request.user
+    if user.is_authenticated:
+        return HttpResponse(f"Ya has ingresado como {user.email}")
+    context = {}
+
+    if request.POST:
+        print (request.POST)
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            print (request.POST)
+            form.save()
+            email = form.cleaned_data.get('email').lower()
+            raw_password = form.cleaned_data.get('password1')
+            account = authenticate(email=email, password=raw_password)
+            login(request, account)
+            destination = get_redirect_if_exists(request)
+            if destination:
+                return redirect(destination)
+            return redirect("home")
+        else:
+            form = RegistrationForm()
+            context['registration_form'] = form
+
+    return render(request, 'app_mvc/register.html', context)
+
+"""

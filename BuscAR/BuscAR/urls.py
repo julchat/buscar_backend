@@ -24,10 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name="home"),
     path('register_flutter/', views.register_flutter_view, name="register_flutter"),
-    path('register/', views.register_view, name="register"),
     path('login_flutter/', views.login_flutter_view, name="login_flutter"),
-    path('login/', views.login_view, name="login"),
-    path('logout/', views.logout_view, name="logout"),
+    path('logout_flutter/', views.logout_flutter_view, name='logout_flutter'),
+
     path('csrf_token/', views.csrf_token_view, name = "csrf"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
@@ -48,4 +47,13 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
+
+
 ]
+
+"""
+Si se quiere incluir estos paths meterlos en la lista de urlpatterns
+    path('login/', views.login_view, name="login"),
+    path('register/', views.register_view, name="register"),
+    path('logout/', views.logout_view, name="logout"),
+"""
