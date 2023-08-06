@@ -16,18 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app_mvc import views
+from app_mvc import views as user_views
 from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_view, name="home"),
-    path('register_flutter/', views.register_flutter_view, name="register_flutter"),
-    path('login_flutter/', views.login_flutter_view, name="login_flutter"),
-    path('logout_flutter/', views.logout_flutter_view, name='logout_flutter'),
+    path('', user_views.home_view, name="home"),
+    path('register_flutter/', user_views.register_flutter_view, name="register_flutter"),
+    path('login_flutter/', user_views.login_flutter_view, name="login_flutter"),
+    path('logout_flutter/', user_views.logout_flutter_view, name='logout_flutter'),
 
-    path('csrf_token/', views.csrf_token_view, name = "csrf"),
+    # VULNERABLE - ELIMINAR / COMENTAR CUANDO SE TERMINE ELDEVELOPMENT
+    path('csrf_token/', user_views.csrf_token_view, name = "csrf"),
+
+    # COMENTAR CUANDO SE PASE A FLUTTER
+    path('login/', user_views.login_view, name="login"),
+    path('register/', user_views.register_view, name="register"),
+    path('logout/', user_views.logout_view, name="logout"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change/done/',
@@ -50,10 +56,3 @@ urlpatterns = [
 
 
 ]
-
-"""
-Si se quiere incluir estos paths meterlos en la lista de urlpatterns
-    path('login/', views.login_view, name="login"),
-    path('register/', views.register_view, name="register"),
-    path('logout/', views.logout_view, name="logout"),
-"""
