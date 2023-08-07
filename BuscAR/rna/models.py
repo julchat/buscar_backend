@@ -14,8 +14,10 @@ class RNA(models.Model):
 
     def entrenar(self, catalogo):
         # entrenar(catalogo): void
-        pass
+        print("ENTRENAMIENTO")
+        return "ENTRENAMIENTO"
 
     def buscarObjeto(self, recinto, objeto):
         # buscarObjeto(recinto, objeto): Dictionary
-        pass
+        print("MODO BÚSQUEDA")
+        return {'encontrado' : 'sabe Dios'}

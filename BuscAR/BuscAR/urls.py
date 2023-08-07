@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app_mvc import views as user_views
+from catalogo import views as catalog_views
+from rna import views as rna_views
 from django.contrib.auth import views as auth_views
 
 
@@ -34,6 +36,12 @@ urlpatterns = [
     path('login/', user_views.login_view, name="login"),
     path('register/', user_views.register_view, name="register"),
     path('logout/', user_views.logout_view, name="logout"),
+
+    path('crear_actualizar_objeto/', catalog_views.crear_actualizar_objeto_view, name="crear_actualizar_objeto"),
+    path('mostrar_catalogo/', catalog_views.mostrar_objetos, name="mostrar_objetos"),
+
+    path('rna_train/', rna_views.entrenar_rna_view, name="rna_train"),
+    path('rna_test/', rna_views.buscar_rna_view, name="rna_test"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change/done/',

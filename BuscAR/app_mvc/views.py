@@ -10,6 +10,7 @@ from clases.StorageAdapter import *
 
 sa = StorageAdapter()
 
+
 def csrf_token_view(request):
     csrf_token = get_token(request)
     return HttpResponse(csrf_token)
@@ -111,18 +112,18 @@ def login_view(request, *args, **kwargs):
 
 
 def register_view(request, *args, **kwargs):
-    #print(request)
-    #print(request.user)
+    # print(request)
+    # print(request.user)
     user = request.user
     if user.is_authenticated:
         return HttpResponse(f"Ya has ingresado como {user.email}")
     context = {}
 
     if request.POST:
-        #print(request.POST)
+        # print(request.POST)
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            #print(request.POST)
+            # print(request.POST)
             form.save()
             email = form.cleaned_data.get('email').lower()
             raw_password = form.cleaned_data.get('password1')
@@ -146,14 +147,13 @@ def register_view(request, *args, **kwargs):
 def accesorias_alta_de_usuario(user):
     if user.is_authenticated:
         containerName = user.username
-        configRnaUrl = user.username
+        configRnaUrl = "weights/" + user.username
+        path_cat_fotos_inicial = "archivos/" + containerName
+        sa.guardarArchivo(path_cat_fotos_inicial, '')
+        sa.guardarArchivo(configRnaUrl, '')
 
         catalogo = Catalogo(usuario=user, containerName=containerName)
         catalogo.save()
-
-        configRnaUrl = "wights/" + user.username
-
-        sa.guardarArchivo(configRnaUrl, '')
 
         red = RNA(user=user, containerName=containerName, configRnaUrl=configRnaUrl)
         red.save()

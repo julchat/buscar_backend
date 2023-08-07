@@ -47,7 +47,7 @@ class Objeto(models.Model):
         pass
 
 
-class fotoUrl(models.Model):
+class FotoUrl(models.Model):
     objeto = models.ForeignKey(Objeto,
                                  on_delete=models.CASCADE, related_name="objeto")
     textoUrl = models.CharField(max_length=250)
