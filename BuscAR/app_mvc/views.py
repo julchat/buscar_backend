@@ -4,14 +4,22 @@ from django.contrib.auth import login, authenticate, logout
 from app_mvc.forms import RegistrationForm, AccountAuthenticationForm
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
+from rna.models import *
+from catalogo.models import *
+from clases.StorageAdapter import *
+
+sa = StorageAdapter()
+
 
 def csrf_token_view(request):
     csrf_token = get_token(request)
     return HttpResponse(csrf_token)
 
+
 def home_view(request):
     context = {}
     return render(request, "app_mvc/home.html", context)
+
 
 def register_flutter_view(request, *args, **kwargs):
     print(request)
@@ -19,10 +27,10 @@ def register_flutter_view(request, *args, **kwargs):
     context = {}
 
     if request.POST:
-        print (request.POST)
+        print(request.POST)
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            print (request.POST)
+            print(request.POST)
             form.save()
             return JsonResponse({'message': 'Exitoso'}, status=200)
         else:
@@ -30,9 +38,11 @@ def register_flutter_view(request, *args, **kwargs):
             context['registration_form'] = form
             return JsonResponse({'message': 'Fallido'}, status=400)
 
+
 def logout_flutter_view(request):
     logout(request)
-    return JsonResponse({'logoutstatus':'OK'}, status = 200)
+    return JsonResponse({'logoutstatus': 'OK'}, status=200)
+
 
 def login_flutter_view(request, *args, **kwargs):
     context = {}
@@ -53,11 +63,12 @@ def login_flutter_view(request, *args, **kwargs):
             if user:
                 login(request, user)
                 print('logeado')
-                return JsonResponse({'usuario':user.username}, status = 200)
+                return JsonResponse({'usuario': user.username}, status=200)
         else:
             print('Form no valido')
             context['login_form'] = form
-        return JsonResponse({'usuario':'error. Logeo malo'},status = 400)
+        return JsonResponse({'usuario': 'error. Logeo malo'}, status=400)
+
 
 def get_redirect_if_exists(request):
     redirect = None
@@ -67,10 +78,14 @@ def get_redirect_if_exists(request):
     return redirect
 
 
-"""
+#####################################################################################
+######################### COMENTAR CUANDO SE PASE A FLUTTER #########################
+#####################################################################################
+
 def logout_view(request):
     logout(request)
     return redirect("home")
+
 
 def login_view(request, *args, **kwargs):
     context = {}
@@ -95,24 +110,29 @@ def login_view(request, *args, **kwargs):
             context['login_form'] = form
     return render(request, "app_mvc/login.html", context)
 
+
 def register_view(request, *args, **kwargs):
-    print(request)
-    print(request.user)
+    # print(request)
+    # print(request.user)
     user = request.user
     if user.is_authenticated:
         return HttpResponse(f"Ya has ingresado como {user.email}")
     context = {}
 
     if request.POST:
-        print (request.POST)
+        # print(request.POST)
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            print (request.POST)
+            # print(request.POST)
             form.save()
             email = form.cleaned_data.get('email').lower()
             raw_password = form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
+
+            accesorias_alta_de_usuario(account)
+
             login(request, account)
+
             destination = get_redirect_if_exists(request)
             if destination:
                 return redirect(destination)
@@ -123,4 +143,17 @@ def register_view(request, *args, **kwargs):
 
     return render(request, 'app_mvc/register.html', context)
 
-"""
+
+def accesorias_alta_de_usuario(user):
+    if user.is_authenticated:
+        containerName = user.username
+        configRnaUrl = "weights/" + user.username
+        path_cat_fotos_inicial = "archivos/" + containerName
+        sa.guardarArchivo(path_cat_fotos_inicial, '')
+        sa.guardarArchivo(configRnaUrl, '')
+
+        catalogo = Catalogo(usuario=user, containerName=containerName)
+        catalogo.save()
+
+        red = RNA(user=user, containerName=containerName, configRnaUrl=configRnaUrl)
+        red.save()

@@ -1,3 +1,4 @@
+import os
 
 
 class StorageAdapter(object):
@@ -15,8 +16,12 @@ class StorageAdapter(object):
         self.cuantaUrl = "url_account_stoagre"   # cambiar según el deployment de Azure
 
     def guardarArchivo(self, url, file):
+        # SI 'file' == '', entonces se crea el directorio en 'url'
+
+        if file == '':
+            if not os.path.exists(url):
+                os.makedirs(url)
         # guardarArchivo(url, file): void
-        pass
 
     def obtenerArchivo(self, url):
         # obtenerArchivo(url): file
