@@ -40,8 +40,8 @@ urlpatterns = [
     path('crear_actualizar_objeto/', catalog_views.crear_actualizar_objeto_view, name="crear_actualizar_objeto"),
     path('mostrar_catalogo/', catalog_views.mostrar_objetos, name="mostrar_objetos"),
 
-    path('rna_train/', rna_views.entrenar_rna_view, name="rna_train"),
-    path('rna_test/', rna_views.buscar_rna_view, name="rna_test"),
+    path('rna_train/<nombre_objeto>/', rna_views.entrenar_rna_view, name="rna_train"),
+    path('rna_test/<nombre_objeto>/', rna_views.buscar_rna_view, name="rna_test"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change/done/',
