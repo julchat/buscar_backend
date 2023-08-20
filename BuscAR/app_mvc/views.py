@@ -147,13 +147,13 @@ def register_view(request, *args, **kwargs):
 def accesorias_alta_de_usuario(user):
     if user.is_authenticated:
         containerName = user.username
-        configRnaUrl = "weights/" + user.username
-        path_cat_fotos_inicial = "archivos/" + containerName
+        configRna = "storage/weights/" + user.username
+        path_cat_fotos_inicial = "storage/archivos/" + containerName
         sa.guardarArchivo(path_cat_fotos_inicial, '')
-        sa.guardarArchivo(configRnaUrl, '')
+        sa.guardarArchivo(configRna, '')
 
         catalogo = Catalogo(usuario=user, containerName=containerName)
         catalogo.save()
 
-        red = RNA(user=user, containerName=containerName, configRnaUrl=configRnaUrl)
+        red = RNA(user=user, containerName=containerName, configRnaUrl=configRna)
         red.save()
