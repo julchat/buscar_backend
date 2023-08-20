@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 class StorageAdapter(object):
@@ -11,21 +12,54 @@ class StorageAdapter(object):
             cls._instancias = obj
         return cls._instancias
 
-    # METODOS DE ISNTANCIA
+    # METODOS DE INSTANCIA
     def __init__(self):
         self.cuantaUrl = "url_account_stoagre"   # cambiar según el deployment de Azure
 
-    def guardarArchivo(self, url, file):
-        # SI 'file' == '', entonces se crea el directorio en 'url'
+    def _obtenerEquivalenteEnStorage(self, url):
+        url_t = 'storage/'
+        l = url.split('/')
+        l = l[1:]
+        for t in l:
+            url_t += t + '/'
+        url_t = url_t[:-1]
 
-        if file == '':
-            if not os.path.exists(url):
-                os.makedirs(url)
+        return url_t
+
+    def obtenerCarpetaParaObjeto(self,file):
+        url_t = ''
+        if file[-4:] == '.xml':
+            url_t = 'xml/'
+        elif file[-4:] in ['.jpg', 'jpeg', '.png']:
+            url_t = 'train/'
+        else:
+            url_t = 'otros/'
+        return url_t
+
+    def crearDirectorio(self, url):
+        # CREA UN DIRECTORIO, SI NO EXISTE
+        if not os.path.exists(url):
+            os.makedirs(url)
+
+    def guardarDirectorio(self, url):
+        # TOMA LOS ARHIVOS DE LA CARPETA TEMPORAL Y LOS MUEVE al storage
+        url_t = self._obtenerEquivalenteEnStorage(url)
+        shutil.copytree(url, url_t)
+        shutil.rmtree('temp/')
+
+    def guardarArchivo(self, url, file):
+        # TOMA LOS ARHIVOS DE LA CARPETA TEMPORAL Y LOS MUEVE al STORAGE
+        url_t = self._obtenerEquivalenteEnStorage(url)
+        url_t += self.obtenerCarpetaParaObjeto(file)
+
+        self.crearDirectorio(url_t)
+        shutil.copy(url + file , url_t + file)
+        shutil.rmtree('temp/')
         # guardarArchivo(url, file): void
 
     def obtenerArchivo(self, url):
         # obtenerArchivo(url): file
-        pass
+        return url
 
     def borrarArchivo(self, url):
         # borrarArchivo(url): file
