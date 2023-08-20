@@ -7,7 +7,8 @@ class RNA(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE, related_name="user_rna")
     containerName = models.CharField(max_length=250)
-    configRna = models.CharField(max_length=250)
+    # configRna = models.CharField(max_length=250)
+    configRna = ""
 
     def __str__(self):
         return self.containerName
