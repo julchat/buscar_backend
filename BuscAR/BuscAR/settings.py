@@ -30,10 +30,10 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # DEVelopment only
 
 # COMENTAR/DESCOMENTAR EN CASO DE PASAR A WEBAPP
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '127.0.0.1', '10.0.0.4', 'buscarg454.eastus.cloudapp.azure.com', '024a-172-171-240-21.ngrok-free.app']
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.128', '192.168.0.125', '192.168.0.159', '127.0.0.1', '10.0.0.4', '192.168.200.2', '192.168.232.2', '10.0.2.2', 'buscarg454.eastus.cloudapp.azure.com', '024a-172-171-240-21.ngrok-free.app']
 #ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 #####
-
+CSRF_COOKIE_NAME = 'csrftoken'
 AUTH_USER_MODEL = "app_mvc.Account"
 
 # Application definition
@@ -167,3 +167,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

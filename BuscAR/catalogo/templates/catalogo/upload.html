@@ -1,0 +1,18 @@
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if request.user.is_authenticated %}
+      <input type="text" name="objNombre" placeholder="escriba aquí el nombre del objeto"/>
+      <input type="file" name="miArchivo">
+      <button type="submit">Upload</button>
+    {% endif %}
+  </form>
+
+  {% if uploaded_file_url %}
+    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    <br>
+    <p><a >Click aquí para entrenar RNA </a></p>
+  {% endif %}
+
+  <p><a href="{% url 'home' %}">Inicio</a></p>
+{% endblock %}

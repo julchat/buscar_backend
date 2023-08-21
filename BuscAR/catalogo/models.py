@@ -1,7 +1,5 @@
 from django.db import models
 from django.conf import settings
-from clases.OurLogger import OurLogger
-from clases.StorageAdapter import StorageAdapter
 
 
 class Catalogo(models.Model):
@@ -12,20 +10,11 @@ class Catalogo(models.Model):
     def __str__(self):
         return self.containerName
 
-    def agregarObjeto(self, nombre, lista_fotos):
-        # agregarObjeto(nombre, [foto]): void
-        pass
-
-    def removerObjeto(self, nombre):
-        # removerObjeto(nombre): void
-        pass
-
     def getObjeto(self, nombre):
-        # getObjeto(String): Objeto
-        pass
+        objeto = Objeto.objects.get(catalogo_id=self.id, nombre=nombre)
+        return objeto
 
-    def getLocacionUrl(self):
-        # getLocacionUrl(): String
+    def agregarObjeto(self, obj):
         pass
 
 
@@ -33,21 +22,41 @@ class Objeto(models.Model):
     catalogo = models.ForeignKey(Catalogo,
                                  on_delete=models.CASCADE, related_name="catalogo")
     nombre = models.CharField(max_length=250)
-    fotosUrl = []
 
     def __str__(self):
         return self.nombre
 
+    def getArchivos(self):
+        catalogo = Catalogo.objects.get(id=self.catalogo_id)
+        filenames_db = FotoUrl.objects.filter(objeto_id=self.id)
+        paths = []
+        for f in filenames_db:
+            path = catalogo.containerName + "/" + self.nombre + "/" + f.textoUrl
+            paths.append(path)
+        return paths
+
+    def esXml(self, file):
+        if file[-4:] == '.xml':
+            return True
+        return False
+
+    def esFoto(self, file):
+        if file[-4:] in ['.jpg', 'jpeg', '.png']:
+            return True
+        return False
+
     def getFotos(self):
-        # getFotos(): List[imagen]
-        pass
+        url_varias = self.getArchivos()
+        fotos = filter(self.esFoto, url_varias)
+        return list(fotos)
 
-    def agregarFoto(self, imagen):
-        # agregarFoto(imagen): void
-        pass
+    def getXml(self):
+        url_varias = self.getArchivos()
+        xmls = filter(self.esXml, url_varias)
+        return list(xmls)
 
 
-class fotoUrl(models.Model):
+class FotoUrl(models.Model):
     objeto = models.ForeignKey(Objeto,
                                  on_delete=models.CASCADE, related_name="objeto")
     textoUrl = models.CharField(max_length=250)
