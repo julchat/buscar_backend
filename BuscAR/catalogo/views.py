@@ -17,10 +17,8 @@ def mostrar_objetos(request):
         #MOSTRAMOS DE PASO LAS FOTOS
         paths = []
         for o in objetos:
-            filenames_db = FotoUrl.objects.filter(objeto_id=o.id)
-            for f in filenames_db:
-                path = "storage/" + catalogo.containerName + "/" + o.nombre + "/" + f.textoUrl
-                paths.append(path)
+            paths += o.getFotos()
+            paths += o.getXml()
 
     return render(request, 'catalogo/mostrar_obj.html', {
         'objetos': objetos ,

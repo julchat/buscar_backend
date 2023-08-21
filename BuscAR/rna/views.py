@@ -8,33 +8,34 @@ from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from clases.StorageAdapter import StorageAdapter
 from clases.OurLogger import OurLogger
-from clases.Catalogo import Catalogo as Catalogo_Obj
-from clases.Objeto import Objeto as Objeto_Obj
+from clases.RNA_Allocator import RNA_Allocator
+
+rna_alloc = RNA_Allocator()
 
 
 def entrenar_rna_view(request, nombre_objeto):
     respuesta = {}
     if request.user.is_authenticated:
+        # OBTENEMOS LA INFO DEL MODELO
         account = Account.objects.get(username=request.user.username)
         red = RNA_ORM.objects.get(user_id=account.id)
         catalogo = Catalogo_ORM.objects.get(usuario_id=account.id)
-        objeto = Objeto_ORM.objects.get(catalogo_id=catalogo.id, nombre=nombre_objeto)
 
-        paths = []
-        filenames_db = FotoUrl_ORM.objects.filter(objeto_id=objeto.id)
-        for f in filenames_db:
-            path = "storage/" + catalogo.containerName + "/" + objeto.nombre + "/" + f.textoUrl
-            paths.append(path)
+        objeto = catalogo.getObjeto(nombre_objeto)
+
+        # GENERAMOS EL MODELO TEMPORAL PARA QUE NO SE SUPERPONGA CON OTROS OBJETOS Y SEA USADO POR LA RNA
+
+        # CONTINUAR ACÁ, CON LAS VALIDACIONES DE SI está entrenando o no
 
         respuesta = red.entrenar(catalogo) + " - " + nombre_objeto
 
     return render(request, 'rna/rna_train.html', {
-            'respuesta': respuesta ,
-            'paths': paths
-        })
+        'respuesta': respuesta,
+        'paths': paths
+    })
 
 
-def buscar_rna_view(request):
+def buscar_rna_view(request, nombre_objeto):
     respuesta = {}
     if request.method == 'POST' and request.FILES['miArchivo'] \
             and request.user.is_authenticated:
