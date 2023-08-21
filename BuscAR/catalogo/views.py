@@ -17,10 +17,8 @@ def mostrar_objetos(request):
         #MOSTRAMOS DE PASO LAS FOTOS
         paths = []
         for o in objetos:
-            filenames_db = FotoUrl.objects.filter(objeto_id=o.id)
-            for f in filenames_db:
-                path = "/archivos/" + catalogo.containerName + "/" + o.nombre + "/" + f.textoUrl
-                paths.append(path)
+            paths += o.getFotos()
+            paths += o.getXml()
 
     return render(request, 'catalogo/mostrar_obj.html', {
         'objetos': objetos ,
@@ -32,13 +30,12 @@ def crear_actualizar_objeto_view(request):
             and request.user.is_authenticated:
         miArchivo = request.FILES['miArchivo']
         objeto = request.POST['objNombre']
-        user_path = "archivos/" + request.user.username + "/" + objeto
+        user_path = "temp/" + request.user.username + "/" + objeto + "/"
         fs = FileSystemStorage(location=user_path)
         filename = fs.save(miArchivo.name, miArchivo)
 
         # USAR ESTO CUANDO SE HABILITE EL STORAGEADAPTER DE AZURE
-        # full_path_filename = user_path + filename
-        # sa.guardarArchivo(full_path_filename, filename)
+        sa.guardarArchivo(user_path, filename)
 
         uploaded_file_url = fs.url(filename)
 
@@ -53,7 +50,8 @@ def crear_actualizar_objeto_view(request):
             objeto_db = Objeto(catalogo = catalogo, nombre=objeto)
             objeto_db.save()
 
-        archivo_asoc = FotoUrl(objeto=objeto_db, textoUrl=filename)
+        url_archivo = sa.obtenerCarpetaParaObjeto(filename) + filename
+        archivo_asoc = FotoUrl(objeto=objeto_db, textoUrl=url_archivo)
         archivo_asoc.save()
 
         return render(request, 'catalogo/upload.html', {
