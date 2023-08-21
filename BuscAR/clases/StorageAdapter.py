@@ -27,6 +27,11 @@ class StorageAdapter(object):
 
         return url_t
 
+    def _obtenerUsuario(self, path):
+        url = path.replace('\\', '/')
+        l = url.split('/')
+        return l[1]
+
     def obtenerCarpetaParaObjeto(self,file):
         url_t = ''
         if file[-4:] == '.xml':
@@ -46,7 +51,9 @@ class StorageAdapter(object):
         # TOMA LOS ARHIVOS DE LA CARPETA TEMPORAL Y LOS MUEVE al storage
         url_t = self._obtenerEquivalenteEnStorage(url)
         shutil.copytree(url, url_t, dirs_exist_ok=True)
-        shutil.rmtree('temp/')
+
+        user = self._obtenerUsuario(url)
+        shutil.rmtree('temp/' + user)
 
     def guardarArchivo(self, url, file):
         # TOMA LOS ARHIVOS DE LA CARPETA TEMPORAL Y LOS MUEVE al STORAGE
@@ -55,7 +62,9 @@ class StorageAdapter(object):
 
         self.crearDirectorio(url_t)
         shutil.copy(url + file , url_t + file)
-        shutil.rmtree('temp/')
+
+        user = self._obtenerUsuario(url)
+        shutil.rmtree('temp/' + user)
         # guardarArchivo(url, file): void
 
     def obtenerArchivo(self, url):
