@@ -16,8 +16,9 @@ class StorageAdapter(object):
     def __init__(self):
         self.cuantaUrl = "url_account_stoagre"   # cambiar según el deployment de Azure
 
-    def _obtenerEquivalenteEnStorage(self, url):
+    def _obtenerEquivalenteEnStorage(self, path):
         url_t = 'storage/'
+        url = path.replace('\\', '/')
         l = url.split('/')
         l = l[1:]
         for t in l:
@@ -44,7 +45,7 @@ class StorageAdapter(object):
     def guardarDirectorio(self, url):
         # TOMA LOS ARHIVOS DE LA CARPETA TEMPORAL Y LOS MUEVE al storage
         url_t = self._obtenerEquivalenteEnStorage(url)
-        shutil.copytree(url, url_t)
+        shutil.copytree(url, url_t, dirs_exist_ok=True)
         shutil.rmtree('temp/')
 
     def guardarArchivo(self, url, file):

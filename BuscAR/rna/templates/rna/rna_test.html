@@ -2,7 +2,6 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% if request.user.is_authenticated %}
-      <input type="text" name="objNombre" placeholder="escriba aquí el nombre del objeto"/>
       <input type="file" name="miArchivo">
       <button type="submit">Upload</button>
     {% endif %}
@@ -13,7 +12,11 @@
     <br>
   {% endif %}
   <br>
-  <p>Respuesta de la RNA  <a href="{{ encontrado }}">{{ encontrado }}</a></p>
+  <p>Respuesta de la RNA
+    <a href="{{ encontrado }}">{{ encontrado }}</a>
+    <a href="{{ ubicaciones }}">{{ ubicaciones }}</a>
+    <a href="{{ precision }}">{{ precision }}</a>
+  </p>
 
   <p><a href="{% url 'home' %}">Inicio</a></p>
 {% endblock %}

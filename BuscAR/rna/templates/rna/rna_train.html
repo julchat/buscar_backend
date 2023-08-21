@@ -2,9 +2,5 @@
   <br>
   <p> Resultado  <a href="{{ respuesta }}">{{ respuesta }}</a></p>
   <br>
-        {% for path in paths %}
-            <li> {{path}}</li>
-        {% endfor %}
-
   <p><a href="{% url 'home' %}">Inicio</a></p>
 {% endblock %}

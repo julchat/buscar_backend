@@ -363,11 +363,8 @@ class KernelRna():
         export_dir = os.path.join('temp', username, name_obj, 'weigth')
         logger.info("Export Directory: {}".format(export_dir))
 
-        try:
-            os.mkdir(export_dir)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
+        singleton.crearDirectorio(export_dir)
+
 
         tf.saved_model.save(
             detection_model, export_dir,
@@ -420,8 +417,6 @@ class KernelRna():
             logger.info('Weigth {} cargado'.format(path_peso))
 
         logger.info('Validation imagen...')
-        ############### ALBI: Nos traemos la imagen a validar al temporal
-        recinto = singleton.obtenerArchivo(recinto)
         im = Image.open(recinto)
         w, h = im.size
         logger.info("Width: {}".format(w))
@@ -449,7 +444,7 @@ class KernelRna():
 
         # BORRAR en produccion, en solo para ver el resultado en desarrollo
         # ===================================================
-        dir_ruta = os.path.join(username, name_obj, 'result')
+        """dir_ruta = os.path.join(username, name_obj, 'result')
         try:
             os.mkdir(dir_ruta)
         except OSError as e:
@@ -468,7 +463,7 @@ class KernelRna():
             detections['detection_classes'][0][:1].numpy().astype(np.uint32)
             + label_id_offset,
             detections['detection_scores'][0][:1].numpy(),
-            category_index, figsize=(15, 20), image_name=ruta)
+            category_index, figsize=(15, 20), image_name=ruta)"""
 
         # ===================================================
 
