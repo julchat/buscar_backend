@@ -31,7 +31,7 @@ class Objeto(models.Model):
         filenames_db = FotoUrl.objects.filter(objeto_id=self.id)
         paths = []
         for f in filenames_db:
-            path = "storage/" + catalogo.containerName + "/" + self.nombre + "/" + f.textoUrl
+            path = catalogo.containerName + "/" + self.nombre + "/" + f.textoUrl
             paths.append(path)
         return paths
 

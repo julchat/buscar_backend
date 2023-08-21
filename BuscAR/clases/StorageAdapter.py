@@ -59,7 +59,11 @@ class StorageAdapter(object):
 
     def obtenerArchivo(self, url):
         # obtenerArchivo(url): file
-        return url
+        return "storage/" + url
+
+    def obtenerDirectorio(self, url):
+        # obtenerDirectorio(url): file
+        return "storage/" + url
 
     def borrarArchivo(self, url):
         # borrarArchivo(url): file

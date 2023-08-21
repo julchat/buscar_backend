@@ -22,11 +22,9 @@ def entrenar_rna_view(request, nombre_objeto):
         catalogo = Catalogo_ORM.objects.get(usuario_id=account.id)
 
         objeto = catalogo.getObjeto(nombre_objeto)
+        paths = []
 
-        # GENERAMOS EL MODELO TEMPORAL PARA QUE NO SE SUPERPONGA CON OTROS OBJETOS Y SEA USADO POR LA RNA
-
-        # CONTINUAR ACÁ, CON LAS VALIDACIONES DE SI está entrenando o no
-
+        # LINEA DE PRUEBA
         respuesta = red.entrenar(catalogo) + " - " + nombre_objeto
 
     return render(request, 'rna/rna_train.html', {
