@@ -42,6 +42,7 @@ urlpatterns = [
 
     path('rna_train/<nombre_objeto>/', rna_views.entrenar_rna_view, name="rna_train"),
     path('rna_test/<nombre_objeto>/', rna_views.buscar_rna_view, name="rna_test"),
+    path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change/done/',

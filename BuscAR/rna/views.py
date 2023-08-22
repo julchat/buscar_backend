@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from rna.models import RNA as RNA_ORM
 from catalogo.models import Catalogo as Catalogo_ORM
-from catalogo.models import Objeto as Objeto_ORM
 from app_mvc.models import Account
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
@@ -10,6 +8,7 @@ from clases.OurLogger import OurLogger
 from clases.RNA_Allocator import RNA_Allocator
 import time
 import shutil
+import os
 
 
 rna_alloc = RNA_Allocator()
@@ -23,25 +22,31 @@ def entrenar_rna_view(request, nombre_objeto):
         account = Account.objects.get(username=request.user.username)
         catalogo = Catalogo_ORM.objects.get(usuario_id=account.id)
 
+        #################
+        # NOS OCUPAMOS DEL ENTRENAMIENTO
+
         logger = OurLogger(request.user.username).get_logger()
 
-        # IMPLEMENTAR ACÁ EL RNA ALLOCATOR
-        #################
-        red = RNA_ORM.objects.get(user_id=account.id)
+        red = rna_alloc.getRNA(account.id)
+        status = red.getEstado()
+
+        if status == 'ON_TRAINING':
+            #SI SE ESTÁ ENTRENANDO AÚN, NO PODEMOS RE ENTRENARLO
+            return HttpResponse("LA RNA ESTÁ EN ENTRENAMIENTO AÚN, POR FAVOR REINTENTE MÁS TARDE")
+
         configRna = '{"train": "' + nombre_objeto + '"}'
+        red.last_obj_on_train = nombre_objeto
         red.setConfig(configRna)
         red.entrenar(catalogo, logger, sa)
 
         time.sleep(3)
 
-        print(red.last_obj_on_train)
         red.last_obj_on_train = nombre_objeto
-        print(red.getEstado())
         #################
 
-        # LINEA DE PRUEBA
-        respuesta = nombre_objeto + " - " + \
-                    red.getContainerName() + " - " + red.getEstado() + " - " + red.last_obj_on_train
+        # IMPRESIÓN RE RESULTADOS
+        respuesta = nombre_objeto + "|" + \
+                    red.getContainerName() + "|" + red.getEstado() + "|" + red.last_obj_on_train
 
     return render(request, 'rna/rna_train.html', {
         'respuesta': respuesta
@@ -56,26 +61,49 @@ def buscar_rna_view(request, nombre_objeto):
 
         # OBTENEMOS LA FOTO DEL RECINTO A ESCANEAR
         miArchivo = request.FILES['miArchivo']
-        # objeto = request.POST['objNombre']
-
         user_path = "temp/" + request.user.username + "/" + nombre_objeto
         fs = FileSystemStorage(location=user_path)
         foto_recinto = fs.save(miArchivo.name, miArchivo)
 
-        # IMPLEMENTAR ACÁ EL RNA ALLOCATOR
         #################
+        # NOS OCUPAMOS DE LA BÚSQUEDA
         logger = OurLogger(request.user.username).get_logger()
-        red = RNA_ORM.objects.get(user_id=account.id)
+
+        red = rna_alloc.getRNA(account.id)
+
+        status = red.getEstado()
+        ultimo_objeto_on_train = red.last_obj_on_train
+
+        if status == 'ON_TRAINING' and ultimo_objeto_on_train == nombre_objeto:
+            #SI SE ESTÁ ENTRENANDO AÚN, NO PODEMOS BUSCARLO
+            return HttpResponse("LA RNA ESTÁ EN ENTRENAMIENTO AÚN PARA ESTE OBJETO, POR FAVOR REINTENTE MÁS TARDE")
+
         configRna = '{"val": "' + nombre_objeto + '"}'
         red.setConfig(configRna)
 
         foto_recinto = user_path + "/" + foto_recinto
-        print(foto_recinto)
-        respuesta = red.buscarObjeto(foto_recinto, logger, sa)
+
+        try:
+            respuesta = red.buscarObjeto(foto_recinto, logger, sa)
+        except OSError as e:
+            return HttpResponse("LA RNA NO ESTÁ ENTRENADA PARA ESTE OBJETO AÚN.")
         #################
 
-        # LINEA DE PRUEBA
-        print(respuesta)
-        shutil.rmtree('temp/' + red.getContainerName() )
+        # LIMPIAMOS LA CARPETA TEMPORAL SIEMPRE Y CUANDO NO HAYA UN TRAININ EN CURSO
+        if status == 'ON_TRAINING':
+            os.remove(foto_recinto)
+        else:
+            shutil.rmtree('temp/' + red.getContainerName() )
 
     return render(request, 'rna/rna_test.html', respuesta)
+
+
+def get_estado_rna_view(request):
+    status = "DESCONOCIDO"
+    if request.user.is_authenticated:
+        # OBTENEMOS LA INFO DEL MODELO
+        account = Account.objects.get(username=request.user.username)
+        red = rna_alloc.getRNA(account.id)
+        status = red.getEstado()
+
+    return HttpResponse(status)
