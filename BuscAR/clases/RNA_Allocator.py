@@ -1,3 +1,6 @@
+from rna.models import RNA as RNA_ORM
+
+
 class RNA_Allocator(object):
     # MÉTODOS DE CLASE // IMPLEMENTACIÓN DEL SINGLETON
     _instancias = None
@@ -12,9 +15,14 @@ class RNA_Allocator(object):
     def __init__(self):
         self.rnas = []
 
-    def getRNA(self, name):
+    def getRNA(self, user_id):
         for red in self.rnas:
-            if red.getContainerName() == name:
+            if red.user_id == user_id:
+                # SI encuentra una RNA, la devuelve
                 return red
-        result = None # INSTANCIAR LA DE GIAN Y DEVOLVERLA
+        # SI NO HAY RNA CREADA, OBTENEMOS UNA INSTANCIA Y LA DEVOLVEMOS
+        result = RNA_ORM.objects.get(user_id=user_id)
+        self.rnas.append(result)
+
         return result
+
