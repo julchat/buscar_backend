@@ -3,9 +3,37 @@ from django.core.files.storage import FileSystemStorage
 from catalogo.models import *
 from app_mvc.models import Account
 from clases.StorageAdapter import *
+from utils import *
+from django.http import JsonResponse
 
 sa = StorageAdapter()
 
+def mostrar_objetos_flutter(request):
+    objetos = []
+    if request.user.is_authenticated:
+        account = Account.objects.get(username=request.user.username)
+        catalogo = Catalogo.objects.get(usuario_id=account.id)
+        objetos = Objeto.objects.filter(catalogo_id=catalogo.id)
+
+        objetos_listos = []
+        for o in objetos:
+            olisto = {}
+            olisto['id'] = o.id
+            fotos = o.getFotos()
+            olisto['primerafoto'] = imagen_a_base64(fotos[0])
+            olisto['nombre'] = o.nombre
+
+            if get_ultimo_objeto_on_train(account) == o.nombre and is_on_training(account):
+                olisto['detectable'] = False
+            else:
+                olisto['detectable'] = True
+            objetos_listos.append(olisto)
+        
+        esta_vacio = False if objetos_listos else True
+        if esta_vacio:
+            return JsonResponse({'vacio' : esta_vacio, 'objetos' : ''}, status = 200)
+        else:
+            return JsonResponse({'vacio' : esta_vacio, 'objetos' : objetos_listos}, status = 200)
 
 def mostrar_objetos(request):
     objetos = []

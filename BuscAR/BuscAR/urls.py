@@ -29,6 +29,8 @@ urlpatterns = [
     path('login_flutter/', user_views.login_flutter_view, name="login_flutter"),
     path('logout_flutter/', user_views.logout_flutter_view, name='logout_flutter'),
 
+    path('mostrar_catalogo_flutter/', catalog_views.mostrar_objetos_flutter, name="mostrar_objetos_flutter"),
+
     # VULNERABLE - ELIMINAR / COMENTAR CUANDO SE TERMINE ELDEVELOPMENT
     path('csrf_token/', user_views.csrf_token_view, name = "csrf"),
 
@@ -41,6 +43,7 @@ urlpatterns = [
     path('mostrar_catalogo/', catalog_views.mostrar_objetos, name="mostrar_objetos"),
 
     path('rna_train/<nombre_objeto>/', rna_views.entrenar_rna_view, name="rna_train"),
+    path('rna_test_flutter/<nombre_objeto>/', rna_views.buscar_rna_view_flutter, name="rna_test_flutter"),
     path('rna_test/<nombre_objeto>/', rna_views.buscar_rna_view, name="rna_test"),
     path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
 
