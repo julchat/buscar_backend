@@ -246,8 +246,8 @@ class KernelRna():
         # These parameters can be tuned; since our training set has 5 images
         batch_size = 4
         learning_rate = 0.01
-        num_batches = 500
-        loss_min = 0.01
+        num_batches = 1000
+        loss_min = 0.005
 
         # Select variables in top layers to fine-tune.
         trainable_variables = detection_model.trainable_variables
