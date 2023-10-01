@@ -17,6 +17,42 @@ from django.http import JsonResponse
 rna_alloc = RNA_Allocator()
 sa = StorageAdapter()
 
+def entrenar_rna_view_flutter(request, nombre_objeto):
+    respuesta = {}
+    if request.user.is_authenticated:
+        # OBTENEMOS LA INFO DEL MODELO
+        account = Account.objects.get(username=request.user.username)
+        catalogo = Catalogo_ORM.objects.get(usuario_id=account.id)
+
+        #################
+        # NOS OCUPAMOS DEL ENTRENAMIENTO
+
+        logger = OurLogger(request.user.username).get_logger()
+
+        red = rna_alloc.getRNA(account.id)
+        status = red.getEstado()
+
+        if status == 'ON_TRAINING':
+            #SI SE ESTÁ ENTRENANDO AÚN, NO PODEMOS RE ENTRENARLO
+            return HttpResponse("LA RNA ESTÁ EN ENTRENAMIENTO AÚN, POR FAVOR REINTENTE MÁS TARDE")
+
+        configRna = '{"train": "' + nombre_objeto + '"}'
+        red.last_obj_on_train = nombre_objeto
+        red.setConfig(configRna)
+        red.entrenar(catalogo, logger, sa)
+
+        time.sleep(3)
+
+        red.last_obj_on_train = nombre_objeto
+        #################
+
+        # IMPRESIÓN RE RESULTADOS
+        respuesta = nombre_objeto + "|" + \
+                    red.getContainerName() + "|" + red.getEstado() + "|" + red.last_obj_on_train
+
+    return render(request, 'rna/rna_train.html', {
+        'respuesta': respuesta
+    })
 
 def entrenar_rna_view(request, nombre_objeto):
     respuesta = {}

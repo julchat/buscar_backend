@@ -3,6 +3,5 @@
 buscarconexion/
 BuscAR/.azure/
 *log
-db.sqlite3
-BuscAR/db.sqlite3
 BuscAR/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/*
+BuscAR/db.sqlite3

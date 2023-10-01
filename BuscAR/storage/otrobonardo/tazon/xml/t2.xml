@@ -1,0 +1,26 @@
+<annotation>
+	<folder>tazon</folder>
+	<filename>t2.jpeg</filename>
+	<path>C:\Users\GIANPIER\Desktop\tazon\t2.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1600</width>
+		<height>900</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>dog</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>539</xmin>
+			<ymin>111</ymin>
+			<xmax>1302</xmax>
+			<ymax>722</ymax>
+		</bndbox>
+	</object>
+</annotation>
