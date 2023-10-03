@@ -75,6 +75,6 @@ class StorageAdapter(object):
         # obtenerDirectorio(url): file
         return "storage/" + url
 
-    def borrarArchivo(self, url):
-        # borrarArchivo(url): file
-        pass
+    def borrarDirectorio(self, url):
+        shutil.rmtree('storage/' + url)
+
