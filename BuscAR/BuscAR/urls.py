@@ -40,6 +40,7 @@ urlpatterns = [
     path('logout/', user_views.logout_view, name="logout"),
 
     path('crear_actualizar_objeto/', catalog_views.crear_actualizar_objeto_view, name="crear_actualizar_objeto"),
+    path('borrar_objeto/<nombre_objeto>/', catalog_views.borrar_objeto_view, name="borrar_objeto"),
     path('crear_actualizar_objeto_flutter/', catalog_views.crear_actualizar_objeto_view_flutter, name="crear_actualizar_objeto_flutter"),
     path('mostrar_catalogo/', catalog_views.mostrar_objetos, name="mostrar_objetos"),
 
@@ -47,6 +48,7 @@ urlpatterns = [
     path('rna_train/<nombre_objeto>/', rna_views.entrenar_rna_view, name="rna_train"),
     path('rna_test_flutter/<nombre_objeto>/', rna_views.buscar_rna_view_flutter, name="rna_test_flutter"),
     path('rna_test/<nombre_objeto>/', rna_views.buscar_rna_view, name="rna_test"),
+    path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
     path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)

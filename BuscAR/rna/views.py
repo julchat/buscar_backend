@@ -169,6 +169,7 @@ def buscar_rna_view(request, nombre_objeto):
         try:
             respuesta = red.buscarObjeto(foto_recinto, logger, sa)
         except OSError as e:
+            print(e)
             return HttpResponse("LA RNA NO ESTÁ ENTRENADA PARA ESTE OBJETO AÚN.")
         #################
 

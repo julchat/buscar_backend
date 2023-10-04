@@ -3,6 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from catalogo.models import *
 from app_mvc.models import Account
 from clases.StorageAdapter import *
+from django.http import HttpResponse
 from utils import *
 from django.http import JsonResponse
 from django.core.files.base import ContentFile
@@ -43,15 +44,15 @@ def mostrar_objetos(request):
         catalogo = Catalogo.objects.get(usuario_id=account.id)
         objetos = Objeto.objects.filter(catalogo_id=catalogo.id)
 
-        #MOSTRAMOS DE PASO LAS FOTOS
+        # MOSTRAMOS DE PASO LAS FOTOS
         paths = []
         for o in objetos:
             paths += o.getFotos()
             paths += o.getXml()
 
     return render(request, 'catalogo/mostrar_obj.html', {
-        'objetos': objetos ,
-        'paths' : paths
+        'objetos': objetos,
+        'paths': paths
     })
 
 def crear_actualizar_objeto_view_flutter(request):
@@ -113,7 +114,7 @@ def crear_actualizar_objeto_view(request):
         try:
             objeto_db = Objeto.objects.get(catalogo_id=catalogo.id, nombre=objeto)
         except:
-            objeto_db = Objeto(catalogo = catalogo, nombre=objeto)
+            objeto_db = Objeto(catalogo=catalogo, nombre=objeto)
             objeto_db.save()
 
         url_archivo = sa.obtenerCarpetaParaObjeto(filename) + filename
@@ -124,3 +125,24 @@ def crear_actualizar_objeto_view(request):
             'uploaded_file_url': uploaded_file_url
         })
     return render(request, 'catalogo/upload.html')
+
+
+def borrar_objeto_view(request, nombre_objeto):
+    if request.user.is_authenticated:
+        account = Account.objects.get(username=request.user.username)
+        catalogo = Catalogo.objects.get(usuario_id=account.id)
+
+        try:
+            objeto_db = Objeto.objects.get(catalogo_id=catalogo.id, nombre=nombre_objeto)
+        except:
+            objeto_db = None
+
+        if objeto_db is not None:
+            objeto_db.delete()
+            url = request.user.username + "/" + nombre_objeto
+            sa.borrarDirectorio(url)
+
+            return HttpResponse("Objeto eliminado correctamente.")
+        else:
+            return HttpResponse("Objeto NO encontrado.")
+

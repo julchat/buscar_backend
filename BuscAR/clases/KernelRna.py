@@ -70,7 +70,7 @@ def plot_detections(image_np,
         scores,
         category_index,
         use_normalized_coordinates=True,
-        min_score_thresh=0.5)
+        min_score_thresh=0.7)
     if image_name:
         plt.imsave(image_name, image_np_with_annotations)
     else:
@@ -131,6 +131,12 @@ class KernelRna():
         self.configRna = configRna
         self.status = 0
         self.detection_model = None
+
+    def getContainerName(self):
+        return self.containerName
+
+    def getconfigRna(self):
+        return self.configRna
 
     def getStatus(self):
         return self.status
@@ -363,9 +369,6 @@ class KernelRna():
         export_dir = os.path.join('temp', username, name_obj, 'weigth')
         logger.info("Export Directory: {}".format(export_dir))
 
-        singleton.crearDirectorio(export_dir)
-
-
         tf.saved_model.save(
             detection_model, export_dir,
             signatures={
@@ -414,13 +417,16 @@ class KernelRna():
         if self.detection_model == None:
             self.cargarWeigth(path_peso, logger, singleton)
         else:
-            logger.info('Weigth {} cargado'.format(path_peso))
+            logger.info('[IA] {}:{} sigue encendida'.format(username, name_obj))
 
-        logger.info('Validation imagen...')
+        logger.info('-------- Validation imagen...')
+        ############### ALBI: Nos traemos la imagen a validar al temporal
+        #recinto = singleton.obtenerArchivo(recinto)
         im = Image.open(recinto)
         w, h = im.size
-        logger.info("Width: {}".format(w))
-        logger.info("Height: {}".format(h))
+
+        logger.info("Name imagen to detect: {}".format(recinto))
+        logger.info("Width: {} | Height: {}".format(w, h))
         img_filename = os.path.basename(recinto)
 
         test_images_np = []
@@ -430,7 +436,6 @@ class KernelRna():
         input_tensor = tf.convert_to_tensor(test_images_np[0], dtype=tf.float32)
         detections = self.detection_model.signatures['detect'](input_tensor)
 
-        logger.info("Name imagen to detect: {}".format(img_filename))
         score = detections['detection_scores'][0][0].numpy() * 100
         logger.info("Score detection: {:.2f}%".format(score))
 
@@ -444,18 +449,20 @@ class KernelRna():
 
         # BORRAR en produccion, en solo para ver el resultado en desarrollo
         # ===================================================
-        """dir_ruta = os.path.join(username, name_obj, 'result')
+        dir_ruta = os.path.join('storage', username, name_obj, 'result')
         try:
             os.mkdir(dir_ruta)
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
 
+
+
         ruta = os.path.join(dir_ruta, img_filename)
         logger.info("[INFO] Path Export: {}".format(ruta))
 
         label_id_offset = 1
-        category_index = {1: {'id': 1, 'name': name_obj}}
+        category_index = {1 : {'id': 1, 'name': name_obj}}
 
         plot_detections(
             test_images_np[0][0],
@@ -463,7 +470,7 @@ class KernelRna():
             detections['detection_classes'][0][:1].numpy().astype(np.uint32)
             + label_id_offset,
             detections['detection_scores'][0][:1].numpy(),
-            category_index, figsize=(15, 20), image_name=ruta)"""
+            category_index, figsize=(15, 20), image_name=ruta)
 
         # ===================================================
 
