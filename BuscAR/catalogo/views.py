@@ -126,6 +126,24 @@ def crear_actualizar_objeto_view(request):
         })
     return render(request, 'catalogo/upload.html')
 
+def borrar_objeto_flutter_view (request, nombre_objeto):
+        if request.user.is_authenticated:
+            account = Account.objects.get(username=request.user.username)
+            catalogo = Catalogo.objects.get(usuario_id=account.id)
+
+            try:
+                objeto_db = Objeto.objects.get(catalogo_id=catalogo.id, nombre=nombre_objeto)
+            except:
+                objeto_db = None
+
+            if objeto_db is not None:
+                objeto_db.delete()
+                url = request.user.username + "/" + nombre_objeto
+                sa.borrarDirectorio(url)
+                return JsonResponse({'resultado': 'exito', 'descripcion': 'OBJETO ELIMINADO CORRECTAMENTE'}, status = 200)
+            else:
+                return JsonResponse({'resultado': 'fallo', 'descripcion': 'NO EXISTE DICHO OBJETO'}, status = 400)
+
 
 def borrar_objeto_view(request, nombre_objeto):
     if request.user.is_authenticated:
@@ -145,4 +163,22 @@ def borrar_objeto_view(request, nombre_objeto):
             return HttpResponse("Objeto eliminado correctamente.")
         else:
             return HttpResponse("Objeto NO encontrado.")
+
+def mostrar_objetos_flutter_view(request, nombre_objeto):
+    objetos = []
+    if request.user.is_authenticated:
+        account = Account.objects.get(username=request.user.username)
+        catalogo = Catalogo.objects.get(usuario_id=account.id)
+        objetos = Objeto.objects.filter(catalogo_id=catalogo.id)
+
+        objeto = objetos.filter(nombre=nombre_objeto).first()
+
+        fotosAEnviar = []
+        for f in objeto.getFotos():
+            foto = imagen_a_base64(f)
+            fotosAEnviar.append(foto)
+        
+        return JsonResponse({'resultado': 'exitoso', 'fotos' : fotosAEnviar}, status = 200)
+    return JsonResponse({'resultado' : 'fallo'}, status = 400)
+
 
