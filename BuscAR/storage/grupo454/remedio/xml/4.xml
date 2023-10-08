@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train</folder>
+	<filename>4.jpg</filename>
+	<path>D:\UTN\Proyecto_Final\fotos_dataset_de_prueba\remedio_20231007\train\4.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3072</width>
+		<height>4080</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>remedio</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1670</xmin>
+			<ymin>966</ymin>
+			<xmax>1833</xmax>
+			<ymax>1366</ymax>
+		</bndbox>
+	</object>
+</annotation>
