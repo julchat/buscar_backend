@@ -32,6 +32,12 @@ def register_flutter_view(request, *args, **kwargs):
         if form.is_valid():
             print(request.POST)
             form.save()
+            email = form.cleaned_data.get('email').lower()
+            raw_password = form.cleaned_data.get('password1')
+            account = authenticate(email=email, password=raw_password)
+
+            accesorias_alta_de_usuario(account)
+            
             return JsonResponse({'message': 'Exitoso'}, status=200)
         else:
             form = RegistrationForm()
@@ -63,11 +69,15 @@ def login_flutter_view(request, *args, **kwargs):
             if user:
                 login(request, user)
                 print('logeado')
-                return JsonResponse({'usuario': user.username}, status=200)
+                print(request.user)
+                token = get_token(request)
+                print(request.session.session_key)
+                session_key = request.session.session_key
+                return JsonResponse({'usuario': user.username, 'token': token, 'session': session_key}, status=200)
         else:
             print('Form no valido')
             context['login_form'] = form
-        return JsonResponse({'usuario': 'error. Logeo malo'}, status=400)
+        return JsonResponse({'usuario': 'HUBO UN ERROR EN LAS CREDENCIALES'}, status=400)
 
 
 def get_redirect_if_exists(request):

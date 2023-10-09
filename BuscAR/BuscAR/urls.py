@@ -29,6 +29,8 @@ urlpatterns = [
     path('login_flutter/', user_views.login_flutter_view, name="login_flutter"),
     path('logout_flutter/', user_views.logout_flutter_view, name='logout_flutter'),
 
+    path('mostrar_catalogo_flutter/', catalog_views.mostrar_objetos_flutter, name="mostrar_objetos_flutter"),
+
     # VULNERABLE - ELIMINAR / COMENTAR CUANDO SE TERMINE ELDEVELOPMENT
     path('csrf_token/', user_views.csrf_token_view, name = "csrf"),
 
@@ -38,10 +40,15 @@ urlpatterns = [
     path('logout/', user_views.logout_view, name="logout"),
 
     path('crear_actualizar_objeto/', catalog_views.crear_actualizar_objeto_view, name="crear_actualizar_objeto"),
+    path('crear_actualizar_objeto_flutter/', catalog_views.crear_actualizar_objeto_view_flutter, name="crear_actualizar_objeto_flutter"),
+    path('borrar_objeto_flutter/<nombre_objeto>/', catalog_views.borrar_objeto_flutter_view, name = "borrar_objeto_flutter"),
     path('borrar_objeto/<nombre_objeto>/', catalog_views.borrar_objeto_view, name="borrar_objeto"),
     path('mostrar_catalogo/', catalog_views.mostrar_objetos, name="mostrar_objetos"),
+    path('mostrar_objeto_flutter/<nombre_objeto>/', catalog_views.mostrar_objetos_flutter_view, name = "mostrar_objetos_flutter"),
 
+    path('rna_train_flutter/<nombre_objeto>/', rna_views.entrenar_rna_view_flutter, name="rna_train_flutter"),
     path('rna_train/<nombre_objeto>/', rna_views.entrenar_rna_view, name="rna_train"),
+    path('rna_test_flutter/<nombre_objeto>/', rna_views.buscar_rna_view_flutter, name="rna_test_flutter"),
     path('rna_test/<nombre_objeto>/', rna_views.buscar_rna_view, name="rna_test"),
     path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
     path('rna_get_estado/', rna_views.get_estado_rna_view, name="rna_get_estado"),
