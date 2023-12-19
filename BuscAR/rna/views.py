@@ -13,6 +13,8 @@ import json
 from utils import *
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
+import random
+import string
 
 rna_alloc = RNA_Allocator()
 sa = StorageAdapter()
@@ -98,7 +100,9 @@ def buscar_rna_view_flutter(request, nombre_objeto):
         if fotoSinDeco:
 
             account = Account.objects.get(username=request.user.username)
-            path = "temp/" + request.user.username + "/" + nombre_objeto + "/" + nombre_objeto + '.jpeg'
+            codigo_aleatorio = generar_codigo_aleatorio()
+            path = "temp/" + request.user.username + "/" + nombre_objeto + "/" + nombre_objeto + '_' + codigo_aleatorio + '.jpeg'
+            
             miArchivoPre = base64_a_imagen(fotoSinDeco)
 
             # OBTENEMOS LA FOTO DEL RECINTO A ESCANEAR
@@ -190,3 +194,8 @@ def get_estado_rna_view(request):
         status = red.getEstado()
 
     return HttpResponse(status)
+
+def generar_codigo_aleatorio(length=6):
+    caracteres = string.ascii_letters + string.digits  # Letras y dígitos
+    codigo_aleatorio = ''.join(random.choice(caracteres) for _ in range(length))
+    return codigo_aleatorio
